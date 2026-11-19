@@ -1,0 +1,20 @@
+# The demo store as a DDEV project: the stand-in server (server.js, Node.js, no dependencies)
+# runs as a daemon of the web container and answers at http://shopify-steps-demo.ddev.site.
+# Started from this folder with `ddev start`; no database.
+name: shopify-steps-demo
+type: generic
+docroot: ""
+webserver_type: generic
+omit_containers: [db]
+web_environment:
+  - HOST=0.0.0.0
+  - PORT=8080
+web_extra_daemons:
+  - name: demo-store
+    command: node server.js
+    directory: /var/www/html
+web_extra_exposed_ports:
+  - name: demo-store
+    container_port: 8080
+    http_port: 80
+    https_port: 443

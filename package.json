@@ -1,0 +1,69 @@
+{
+  "name": "@webship-js/shopify-steps",
+  "version": "2.0.0",
+  "description": "Cucumber step definitions for online stores built on Shopify, a plugin for webship-js (Playwright and Cucumber): the collection page (filters and sort), the product page (variant picker, quantity, add to cart, sold out, the dynamic checkout button), the cart drawer and the cart page (quantity, remove, the note), predictive search, the country and language selectors, the newsletter form, the cookie banner and the store password page. Steps find a theme's parts by role, label and heading, and wait on the store's own requests. With a demo store that stands in for the platform, and read-only checks on real public stores.",
+  "main": "tests/step-definitions/store-helpers.js",
+  "files": [
+    "tests/step-definitions/",
+    "tests/features/",
+    "demo-site/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "cucumber-js --config cucumber.js",
+    "test:dry": "cucumber-js --config cucumber.js --dry-run",
+    "test:examples": "node tests/check-examples.js",
+    "test:paths": "node tests/check-paths.js",
+    "test:must-fail": "node tests/check-must-fail.js",
+    "test:chromium": "BROWSER=chromium cucumber-js --config cucumber.js",
+    "test:firefox": "BROWSER=firefox cucumber-js --config cucumber.js",
+    "test:webkit": "BROWSER=webkit cucumber-js --config cucumber.js",
+    "test:headed": "HEADLESS=false cucumber-js --config cucumber.js",
+    "demo:serve": "node demo-site/server.js",
+    "demo:start": "cd demo-site && ddev start",
+    "demo:stop": "cd demo-site && ddev stop",
+    "generate-reports": "generate-reports",
+    "test:fast": "SLOW_MO=0 cucumber-js --config cucumber.js"
+  },
+  "keywords": [
+    "webship-js",
+    "shopify",
+    "storefront",
+    "ecommerce",
+    "cucumber",
+    "cucumber-js",
+    "playwright",
+    "bdd",
+    "testing",
+    "e2e",
+    "gherkin"
+  ],
+  "author": "Webship.co",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webship/shopify-steps.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webship/shopify-steps/issues"
+  },
+  "homepage": "https://github.com/webship/shopify-steps#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 20.0"
+  },
+  "peerDependencies": {
+    "webship-js": "^2.0.16"
+  },
+  "devDependencies": {
+    "@webship-js/bootstrap-steps": "^2.0.0",
+    "tsx": "^4.23.0",
+    "webship-js": "^2.0.16"
+  },
+  "overrides": {
+    "@cucumber/cucumber": "^12"
+  }
+}
