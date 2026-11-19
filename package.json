@@ -16,6 +16,7 @@
     "test:examples": "node tests/check-examples.js",
     "test:paths": "node tests/check-paths.js",
     "test:must-fail": "node tests/check-must-fail.js",
+    "test:live": "node tests/run-live.js",
     "test:chromium": "BROWSER=chromium cucumber-js --config cucumber.js",
     "test:firefox": "BROWSER=firefox cucumber-js --config cucumber.js",
     "test:webkit": "BROWSER=webkit cucumber-js --config cucumber.js",
