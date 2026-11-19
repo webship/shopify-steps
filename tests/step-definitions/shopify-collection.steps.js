@@ -251,22 +251,26 @@ Then(/^the products should( not)? be filtered by "([^"]*)" under "([^"]*)"$/, as
  * Example #5: When filter the products by price from 5 to 25
  */
 When(/^(?:I |we )?filter the products by price from (\d+(?:[.,]\d+)?) to (\d+(?:[.,]\d+)?)$/, async function (from, to) {
-  const fields = await H.poll(this, () => {
+  // The field is looked up again for each value: a theme may load its list (and its filters)
+  // again as soon as the first one changes.
+  const field = (name) => H.poll(this, (n) => {
     const S = window.__webshipStore;
-    const p = S.priceInputs();
-    const gte = p.gte.find(S.visible) || p.gte[0];
-    const lte = p.lte.find(S.visible) || p.lte[0];
-    return gte && lte ? { done: true, gte: S.mark(gte), lte: S.mark(lte) } : { done: false };
-  }, null, H.budget(this));
-  if (!fields.done) throw H.failure(this.page, 'Expected the price filter (its "from" and "to" fields), but the page has none.', { hint: 'the merchant chooses which filters a collection shows.' });
-  const shown = await reveal(this, fields.gte);
+    const list = [...document.querySelectorAll(`input[name="${n}"]`)];
+    const el = list.find(S.visible) || list[0];
+    return el ? { done: !document.querySelector('[aria-busy="true"]'), sel: S.mark(el) } : { done: false };
+  }, name, H.budget(this));
+  const first = await field('filter.v.price.gte');
+  if (!first.sel) throw H.failure(this.page, 'Expected the price filter (its "from" and "to" fields), but the page has none.', { hint: 'the merchant chooses which filters a collection shows.' });
+  const shown = await reveal(this, first.sel);
   if (shown.stuck) throw H.failure(this.page, 'The price filter is on the page but hidden, and no button opens it.', { hint: 'open the filters first (When I press "Filter").' });
   const a = Number(String(from).replace(',', '.'));
   const b = Number(String(to).replace(',', '.'));
-  await this.page.locator(fields.gte).fill(String(from));
-  await this.page.locator(fields.gte).dispatchEvent('change');
-  await this.page.locator(fields.lte).fill(String(to));
-  await this.page.locator(fields.lte).dispatchEvent('change');
+  for (const [name, value] of [['filter.v.price.gte', from], ['filter.v.price.lte', to]]) {
+    const now = await field(name);
+    if (!now.sel) throw H.failure(this.page, `Expected the price filter's field ${name}, but the page has none.`, { hint: 'the price filter has a "from" and a "to" field.' });
+    await this.page.locator(now.sel).fill(String(value), { timeout: H.budget(this) });
+    await H.settle(this);
+  }
   const done = await waitForQuery(this, { kind: 'number', name: 'filter.v.price.lte', value: b });
   const both = await waitForQuery(this, { kind: 'number', name: 'filter.v.price.gte', value: a }, 3000);
   if (!done.done || !both.done) {
