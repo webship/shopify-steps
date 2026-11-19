@@ -159,8 +159,8 @@ wrote:
 
 ```
 3 scenarios (3 passed)
-13 steps (13 passed)
-0m04.121s (executing steps: 0m04.084s)
+10 steps (10 passed)
+0m03.494s (executing steps: 0m03.461s)
 [webship-js] HTML report → …/shopify-tests/tests/reports/cucumber_report.html
 ```
 
@@ -296,9 +296,17 @@ Feature: The winter collection
 ```
 
 Run `npx cucumber-js --dry-run` once: it reports any undefined or ambiguous step
-before a browser opens. The pack loads beside webship-js's own steps and beside
-the step pack for the components of any site (`@webship-js/bootstrap-steps`) without
-an ambiguous step; the check of this repository loads both.
+before a browser opens. The pack loads beside webship-js's own steps, the visual
+comparison pack (`@webship-js/diffy-steps`) and the step pack for the components of
+any site (`@webship-js/bootstrap-steps`) without an ambiguous step; the check of this
+repository loads the last one too. It shares its shop phrases on purpose with the
+step packs of other store and site platforms (`@webship-js/magento-steps`,
+`prestashop-steps`, `squarespace-steps`, `webflow-steps`, `odoo-steps` and
+`hubspot-cms-steps`): `I add the product to the cart`, `the cart should contain "…"`,
+`the product price should be "…"`, the pages of `the product list`, `I search the
+store for "…"`, `I remove "…" from the cart`, `I accept the cookies` and `I should see
+the cookie banner`, among others. A project that tests the stores of two platforms
+loads each platform's pack in a profile of its own.
 
 ## Test users
 
