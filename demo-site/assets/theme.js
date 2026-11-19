@@ -114,7 +114,9 @@
   function changeLine(key, quantity) {
     var busy = $$('[data-cart-form]');
     busy.forEach(function (f) { f.setAttribute('aria-busy', 'true'); });
-    return post(root + 'cart/change.js', { id: key, quantity: quantity, sections: 'cart-drawer,cart-icon' })
+    var data = { id: key, quantity: quantity, sections: 'cart-drawer,cart-icon' };
+    // A request cut off on its way is sent once more.
+    return post(root + 'cart/change.js', data).catch(function () { return post(root + 'cart/change.js', data); })
       .then(function (result) {
         if (result.ok) renderSections(result.body.sections);
         return refreshCartPage();
@@ -317,12 +319,19 @@
     var target = new URL(url, window.location.href);
     var fetchUrl = new URL(target.toString());
     fetchUrl.searchParams.set('section_id', id);
-    fetch(fetchUrl.toString()).then(function (r) { return r.text(); }).then(function (html) {
+    fetch(fetchUrl.toString()).then(function (r) {
+      if (!r.ok) throw new Error('The store answered ' + r.status);
+      return r.text();
+    }).then(function (html) {
       var holder = document.createElement('div');
       holder.innerHTML = html;
       var fresh = holder.firstElementChild;
       if (fresh) section.replaceWith(fresh);
       if (push) window.history.pushState({ facets: true }, '', target.pathname + target.search);
+    }).catch(function () {
+      // A request cut off on its way (the browser's network changed): load the page itself,
+      // the way the filters work without JavaScript.
+      window.location.assign(target.pathname + target.search);
     });
   }
 
@@ -419,7 +428,9 @@
     lastQuery = q;
     results.setAttribute('aria-busy', 'true');
     var url = root + 'search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=query,product,collection,page&resources[limit]=4&resources[limit_scope]=each';
-    fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+    var ask = function () { return fetch(url).then(function (r) { return r.json(); }); };
+    // A request cut off on its way is sent once more.
+    ask().catch(ask).then(function (data) {
       results.removeAttribute('aria-busy');
       if (q !== lastQuery || input.value.trim() !== q) return;
       renderResults(q, data);
