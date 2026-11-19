@@ -12,4 +12,5 @@ Feature: A store on a theme of the brand's own
     Then the page should be a storefront page
     And the store should not use the theme "Horizon"
     And I should see the newsletter form
+    And the newsletter email field should be required
     And the cart should be empty
