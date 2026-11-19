@@ -41,7 +41,8 @@ CI starts the pack's demo store (`demo-site/`, see [The demo
 store](#the-demo-store)) with DDEV on the runner and runs the whole suite against
 it twice, then the assertions that must fail; and it runs the suite once more
 against the same store served by its own small server, without a container. See
-[`.github/workflows/test.yml`](.github/workflows/test.yml).
+[`.github/workflows/test.yml`](.github/workflows/test.yml). The steps are also
+proven, read-only, on real public stores: [`tests/live/`](tests/live/).
 
 ## From nothing to a green run
 
@@ -224,6 +225,30 @@ the button that leaves the store; gift cards, discounts at the checkout, selling
 plans (subscriptions), product bundles, the store's blog, its contact form, the
 theme editor and the store's admin. A successful newsletter sign-up is not tested
 (it makes a customer record).
+
+## Run the steps against real stores
+
+[`tests/live/`](tests/live/) holds read-only checks of the steps on real public
+stores, to prove that they read what real themes produce and not only what
+`demo-site/` serves: a store on a free theme of the platform, one on a copy of its
+newest free theme, one on a paid theme and one on a theme of the brand's own. The
+file name is the store: `tests/live/ugmonk.com.feature` runs against
+`https://ugmonk.com`.
+
+```bash
+npm run test:live                      # every store, one scenario at a time
+npm run test:live -- www.thesill.com   # one store
+```
+
+They only read: they never add to a cart, sign in, place an order or send a form
+(choosing a size, sorting a collection or typing in a search box loads pages and
+suggestions, and nothing else). Each scenario loads one page, and the runner waits
+eight seconds between scenarios (`LIVE_PAUSE_MS`). They are run by hand, never in
+CI on every push: the stores belong to their owners, change without notice and may
+look different from another country (the checks were written from outside the US).
+On GitHub, the workflow [`live.yml`](.github/workflows/live.yml) runs them only when
+started by hand (one store, or all). When a check fails because a store changed,
+update the check, not the step.
 
 ## Requirements
 
@@ -437,6 +462,7 @@ npm run test:paths         # a feature or a scenario named on the command line r
 npx cucumber-js --dry-run  # no undefined and no ambiguous step
 LAUNCH_URL=http://127.0.0.1:8080 npm test                # the suite
 LAUNCH_URL=http://127.0.0.1:8080 npm run test:must-fail  # assertions that must fail, each with its message
+npm run test:live -- ugmonk.com                          # read-only checks of one real store
 ```
 
 `tests/must-fail/` holds scenarios that assert something that is not true on the
