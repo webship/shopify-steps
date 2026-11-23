@@ -46,7 +46,7 @@ proven, read-only, on real public stores: [`tests/live/`](tests/live/).
 
 ## From nothing to a green run
 
-What the machine needs: git, Node.js 20 or later with npm, and, for the first way
+What the machine needs: git, Node.js 24 or later with npm, and, for the first way
 below, Docker with [DDEV](https://ddev.com) (or another container tool).
 
 **1. The store.** A store on the platform is hosted by the platform, so the pack
@@ -56,7 +56,7 @@ store](#the-demo-store)). It needs a server that answers the cart and search cal
 with JSON, so it runs one of two ways, and both give the full store:
 
 - in a container, with DDEV (the demo has its project in `demo-site/.ddev`; any
-  container tool that runs Node.js 20 can run `node server.js` the same way):
+  container tool that runs Node.js 24 can run `node server.js` the same way):
 
   ```bash
   git clone https://github.com/webship/shopify-steps.git
@@ -252,7 +252,7 @@ update the check, not the step.
 
 ## Requirements
 
-- Node.js 20 or later
+- Node.js 24 or later
 - A webship-js 2.0 test project (webship-js 2.0.16 or later)
 - A store on the platform, or the demo store of this repository
 

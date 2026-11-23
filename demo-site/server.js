@@ -9,7 +9,7 @@
 // /cart, /localization, /contact, /password). It also serves a second storefront under /locked/,
 // protected by a password. Carts live in memory, one per `cart` cookie.
 //
-// Node.js 20 or later, no dependencies:   node demo-site/server.js
+// Node.js 24 or later, no dependencies:   node demo-site/server.js
 // PORT (default 8080) and HOST (default 127.0.0.1) set where it listens.
 
 const http = require('http');
