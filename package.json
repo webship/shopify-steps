@@ -1,6 +1,6 @@
 {
   "name": "@webship-js/shopify-steps",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Cucumber step definitions for online stores built on Shopify, a plugin for webship-js (Playwright and Cucumber): the collection page (filters and sort), the product page (variant picker, quantity, add to cart, sold out, the dynamic checkout button), the cart drawer and the cart page (quantity, remove, the note), predictive search, the country and language selectors, the newsletter form, the cookie banner and the store password page. Steps find a theme's parts by role, label and heading, and wait on the store's own requests. With a demo store that stands in for the platform, and read-only checks on real public stores.",
   "main": "tests/step-definitions/store-helpers.js",
   "files": [
